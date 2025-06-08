@@ -48,13 +48,23 @@ class FunctionDescription(DescriptionABC):
             self.decorators.append(re_match.group(1))
 
         # parameters
-        re_iter_match = re.finditer(
-            pattern=r"(\w+)[\t ]*:[\t ]*(\w+)(?=.*?\) -> .*?:)",
+        re_match = re.search(
+            pattern=r"def \w+\((.*?)\)",
             string=source,
+            flags=re.MULTILINE,
         )
+        parameter_string: str = "" if re_match is None else re_match.group(1)
+        print('...parameter string')
+        print(parameter_string)
+        re_iter_match = re.finditer(
+            pattern=r"(?:^|,)[\t ]*(\w+)(?:[\t ]*:[\t ]*(?:(\w+\[.*?\])|(\w+))|())(?=(?:[^\]]*?,|[^\]]*?$))",
+            string=parameter_string,
+            flags=re.MULTILINE,
+        )
+        print('...re_iter_match')
         self.parameters: dict[str, str] = {}
         for re_match in re_iter_match:
-            self.parameters[re_match.group(1)] = re_match.group(2)
+            self.parameters[re_match.group(1)] = re_match.group(2) if re_match.group(2) is not None else re_match.group(3)
 
         # return values
         re_match = re.search(

@@ -41,7 +41,8 @@ class ClassDescription(DescriptionABC):
         # base classes
         re_match = re.search(
             pattern=r"^class\s\w+\((.*)\):\n",
-            string=source
+            string=source,
+            flags=re.MULTILINE,
         )
         base_class_string: str = "" if re_match is None else re_match.group(1)
         self.base_classes: list[str] = re.split(
@@ -51,13 +52,15 @@ class ClassDescription(DescriptionABC):
 
         # members
         re_match = re.search(
-            pattern=r"class .*\n[\t ]*\"\"\"(?:.|\n)*?\"\"\"\n(([\t ]*).*(?:\n\2.*)*)",
+            pattern=r"class .*\n[\t ]*\"\"\"(?:.|\n)*?\"\"\"\n(([\t ]*).*(?:\n\2.*)*?)(?:\n\n|@|def)",
             string=source,
+            flags=re.MULTILINE,
         )
         members_string: str = "" if re_match is None else re_match.group(1)
         re_iter_match = re.finditer(
-            pattern=r"[\t ]*(\w+)[\t ]*:[\t ]*(.+?)(?:[\t ]+#[\t ]+(.*)\n|()\n)",
+            pattern=r"^[\t ]+(\w+)[\t ]*:[\t ]*(.+?)(?:[\t ]+#[\t ]+(.*)|())$",
             string=members_string,
+            flags=re.MULTILINE,
         )
         self.members: dict[str, tuple[str, str]] = {}
         for re_match in re_iter_match:
