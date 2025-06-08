@@ -23,7 +23,7 @@ if __name__ == "__main__":
         raise ValueError(f"Path {args.path} is not a valid path.")
     if not args.path.is_dir:
         raise ValueError(f"Path {args.path} is not a directory.")
-    if args.path.glob("__init__.py").__len__() == 0:
+    if len(list(args.path.glob("__init__.py"))) != 1:
         raise ValueError(f"Path {args.path} does not contain a `__init__.py` file.")
 
     # Parse module informations
