@@ -1,11 +1,11 @@
-from abc import ABC, abstractmethod
 import re
+from abc import ABC, abstractmethod
 from typing import Any
 
 
 class DescriptionABC(ABC):
-    """Abstract base class for object descriptions.
-    """
+    """Abstract base class for object descriptions."""
+
     source: str  # source string from which the description is extracted
     name: str  # name of the described object
     docstring: str  # docstring of the described object
