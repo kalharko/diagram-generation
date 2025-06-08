@@ -1,8 +1,5 @@
 import argparse
-import re
 from pathlib import Path
-from re import Match
-from typing import Iterator
 
 from diagram_generation import parse_class_descriptions_from_module
 from diagram_generation.python.class_description import ClassDescription
