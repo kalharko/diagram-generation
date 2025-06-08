@@ -1,7 +1,7 @@
 from diagram_generation.python.class_description import ClassDescription
 
 
-def test_python_class_parsing():
+def test_python_class_parsing() -> None:
     source = """
 asdfa
 asdf
