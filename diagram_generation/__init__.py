@@ -1,9 +1,8 @@
-
-
+import re
 from pathlib import Path
 from re import Match
-import re
 from typing import Iterator
+
 from diagram_generation.python.class_description import ClassDescription
 
 
@@ -21,7 +20,6 @@ def parse_class_descriptions_from_module(path: Path) -> list[ClassDescription]:
 
     # Walk all python files at the given path and its subfolders
     for path in path.glob("**/*.py"):
-
         # Read the file
         with path.open("r") as f:
             source = f.read()

@@ -1,9 +1,10 @@
 
 
+import re
 from pathlib import Path
 from re import Match
-import re
 from typing import Iterator
+
 from diagram_generation.python.class_description import ClassDescription
 
 

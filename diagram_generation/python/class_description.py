@@ -1,6 +1,7 @@
-from re import Match
 import re
+from re import Match
 from typing import Iterator
+
 from diagram_generation.python import DescriptionABC
 from diagram_generation.python.function_description import FunctionDescription
 
@@ -10,6 +11,7 @@ class ClassDescription(DescriptionABC):
     Responsabilities:
     - Describe a python class.
     """
+
     base_classes: list[str]
     members: dict[str, tuple[str, str]]  # {name: (type hint, description)}
     methods: list[FunctionDescription]
@@ -24,10 +26,7 @@ class ClassDescription(DescriptionABC):
         re_iter_match: Iterator[Match[str]]
 
         # name
-        re_match = re.search(
-            pattern=r"class\s(\w+)\(",
-            string=source
-        )
+        re_match = re.search(pattern=r"class\s(\w+)\(", string=source)
         self.name = "" if re_match is None else re_match.group(1)
 
         # docstring
@@ -46,8 +45,7 @@ class ClassDescription(DescriptionABC):
         )
         base_class_string: str = "" if re_match is None else re_match.group(1)
         self.base_classes: list[str] = re.split(
-            pattern=r"\s*,\s*",
-            string=base_class_string
+            pattern=r"\s*,\s*", string=base_class_string
         )
 
         # members
