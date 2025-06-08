@@ -23,7 +23,9 @@ if __name__ == "__main__":
         raise ValueError(f"Path {args.path} does not contain a `__init__.py` file.")
 
     # Parse module informations
-    class_descriptions: list[ClassDescription] = parse_class_descriptions_from_module(path=args.path)
+    class_descriptions: list[ClassDescription] = parse_class_descriptions_from_module(
+        path=args.path
+    )
 
     # Render class descriptions
     for class_description in class_descriptions:
