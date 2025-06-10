@@ -26,7 +26,7 @@ class DescriptionABC(ABC):
         """
 
         rematch = re.search(
-            pattern=r"(?s)(Responsabilities:.*?)(?:\"\"\"|\n\n)",  # TODO: check regex pattern
+            pattern=r"(?s)(Responsabilities:.*?)(?:\Z|\n\n)",
             string=self.docstring,
             flags=re.MULTILINE,
         )
