@@ -34,6 +34,7 @@ class A(B, C):
     end of docstring.
     """
     )
+    assert class_description.responsability == "Responsabilities:\n    - Dummy responsability"
     assert class_description.base_classes == ["B", "C"]
     assert class_description.method_names == ["__init__"]
     assert class_description.members == {"member": ("member_typehint", "member_doc")}
