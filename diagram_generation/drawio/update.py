@@ -1,8 +1,13 @@
-
 import re
 from re import Match
 from typing import Iterator
-from diagram_generation.drawio.generate import class_full_drawio_table, get_members_value_height, get_methods_value_height, get_responsability_value_height
+
+from diagram_generation.drawio.generate import (
+    class_full_drawio_table,
+    get_members_value_height,
+    get_methods_value_height,
+    get_responsability_value_height,
+)
 from diagram_generation.python.class_description import ClassDescription
 
 
@@ -20,14 +25,16 @@ def update_drawio(current_xml: str, class_descriptions: list[ClassDescription]) 
     classes_to_be_added: list[ClassDescription] = []
 
     for description in class_descriptions:
-        responsability_text, responsability_height = get_responsability_value_height(description)
+        responsability_text, responsability_height = get_responsability_value_height(
+            description
+        )
         members_text, members_height = get_members_value_height(description)
         methods_text, methods_height = get_methods_value_height(description)
 
         # Parse class id in current_xml
         re_match: Match[str] | None
         re_match = re.search(
-            pattern=f"<mxCell id=\"(.*)\" value=\"{description.name}\"",
+            pattern=f'<mxCell id="(.*)" value="{description.name}"',
             string=current_xml,
             flags=re.MULTILINE,
         )
@@ -39,51 +46,63 @@ def update_drawio(current_xml: str, class_descriptions: list[ClassDescription]) 
 
         # Replace responsability
         current_xml = re.sub(
-            pattern=f"(<mxCell id=\"{id + 1}\" value=\").*?(\")",
+            pattern=f'(<mxCell id="{id + 1}" value=").*?(")',
             repl=f"\\1{responsability_text}\\2",
             string=current_xml,
             flags=re.MULTILINE,
         )
         re_match = re.search(
-            pattern=f"(?s)<mxCell id=\"{id + 1}\".*?mxGeometry.*?height=\"(.*?)\"",
+            pattern=f'(?s)<mxCell id="{id + 1}".*?mxGeometry.*?height="(.*?)"',
             string=current_xml,
             flags=re.MULTILINE,
         )
         if re_match is None:
             raise Exception("Failed to get responsability height")
-        current_xml = current_xml[: re_match.start(1)] + str(responsability_height) + current_xml[re_match.end(1):]
+        current_xml = (
+            current_xml[: re_match.start(1)]
+            + str(responsability_height)
+            + current_xml[re_match.end(1) :]
+        )
 
         # Replace members
         current_xml = re.sub(
-            pattern=f"(<mxCell id=\"{id + 2}\" value=\").*?(\")",
+            pattern=f'(<mxCell id="{id + 2}" value=").*?(")',
             repl=f"\\1{members_text}\\2",
             string=current_xml,
             flags=re.MULTILINE,
         )
         re_match = re.search(
-            pattern=f"(?s)<mxCell id=\"{id + 2}\".*?mxGeometry.*?height=\"(.*?)\"",
+            pattern=f'(?s)<mxCell id="{id + 2}".*?mxGeometry.*?height="(.*?)"',
             string=current_xml,
             flags=re.MULTILINE,
         )
         if re_match is None:
             raise Exception("Failed to get members height")
-        current_xml = current_xml[: re_match.start(1)] + str(members_height) + current_xml[re_match.end(1):]
+        current_xml = (
+            current_xml[: re_match.start(1)]
+            + str(members_height)
+            + current_xml[re_match.end(1) :]
+        )
 
         # Replace methods
         current_xml = re.sub(
-            pattern=f"(<mxCell id=\"{id + 3}\" value=\").*?(\")",
+            pattern=f'(<mxCell id="{id + 3}" value=").*?(")',
             repl=f"\\1{methods_text}\\2",
             string=current_xml,
             flags=re.MULTILINE,
         )
         re_match = re.search(
-            pattern=f"(?s)<mxCell id=\"{id + 3}\".*?mxGeometry.*?height=\"(.*?)\"",
+            pattern=f'(?s)<mxCell id="{id + 3}".*?mxGeometry.*?height="(.*?)"',
             string=current_xml,
             flags=re.MULTILINE,
         )
         if re_match is None:
             raise Exception("Failed to get methods height")
-        current_xml = current_xml[: re_match.start(1)] + str(methods_height) + current_xml[re_match.end(1):]
+        current_xml = (
+            current_xml[: re_match.start(1)]
+            + str(methods_height)
+            + current_xml[re_match.end(1) :]
+        )
 
     # Add new classes
     max_id: int = _get_max_id_in_drawio(current_xml)
@@ -93,7 +112,7 @@ def update_drawio(current_xml: str, class_descriptions: list[ClassDescription]) 
 
     current_xml = re.sub(
         pattern=r"(\n)(?=[\t ]*</root>)",
-        repl='\n' + to_be_added_xml + '\n',
+        repl="\n" + to_be_added_xml + "\n",
         string=current_xml,
         flags=re.MULTILINE,
     )
@@ -108,7 +127,4 @@ def _get_max_id_in_drawio(xml: str) -> int:
         flags=re.MULTILINE,
     )
 
-    return max(
-        int(re_match.group(1))
-        for re_match in re_iter_match
-    )
+    return max(int(re_match.group(1)) for re_match in re_iter_match)

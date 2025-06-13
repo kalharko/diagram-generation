@@ -38,7 +38,9 @@ if __name__ == "__main__":
     if not args.input_path.is_dir:
         raise ValueError(f"Path {args.input_path} is not a directory.")
     if len(list(args.input_path.glob("__init__.py"))) != 1:
-        raise ValueError(f"Path {args.input_path} does not contain a `__init__.py` file.")
+        raise ValueError(
+            f"Path {args.input_path} does not contain a `__init__.py` file."
+        )
 
     # Parse module informations
     class_descriptions: list[ClassDescription] = parse_class_descriptions_from_module(
@@ -54,7 +56,9 @@ if __name__ == "__main__":
         # Update existing diagram
         with open(args.output_path, "r") as f:
             current_xml: str = f.read()
-        xml = update_drawio(current_xml=current_xml, class_descriptions=class_descriptions)
+        xml = update_drawio(
+            current_xml=current_xml, class_descriptions=class_descriptions
+        )
 
     # Save diagram
     with open(args.output_path, "w") as f:
