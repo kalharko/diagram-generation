@@ -70,7 +70,7 @@ def class_full_drawio_table(description: ClassDescription, id: int) -> str:
 def get_responsability_value_height(description: ClassDescription) -> tuple[str, int]:
     # Responsability paragraph
     responsability_text = description.responsability.replace("\n", "&lt;div&gt;")
-    responsability_height = responsability_text.count("&lt;div&gt;") * 15 + 10
+    responsability_height = responsability_text.count("&lt;div&gt;") * 20 + 10
     responsability_height = max(responsability_height, 20)
 
     return responsability_text, responsability_height
@@ -82,7 +82,7 @@ def get_members_value_height(description: ClassDescription) -> tuple[str, int]:
         f"{name}: {type_hint}"
         for name, (type_hint, _) in description.members.items()
     )  # _private: list[str]&amp;nbsp;
-    members_height = members_text.count("&lt;div&gt;") * 15 + 10
+    members_height = members_text.count("&lt;div&gt;") * 20 + 10
     members_height = max(members_height, 20)
     return members_text, members_height
 
@@ -93,7 +93,7 @@ def get_methods_value_height(description: ClassDescription) -> tuple[str, int]:
         f"{f.name}({', '.join(f.parameters)}) -&amp;gt; {f.return_typehint}"
         for f in description.methods
     )  # public(param) -&amp;gt; None&lt;div&gt;_private_with_long_name(self) -&amp;gt; None&lt;/div&gt;
-    methods_height = methods_text.count("&lt;div&gt;") * 15 + 10
+    methods_height = methods_text.count("&lt;div&gt;") * 20 + 10
     methods_height = max(methods_height, 20)
 
     return methods_text, methods_height
