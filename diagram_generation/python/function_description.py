@@ -13,6 +13,7 @@ class FunctionDescription(DescriptionABC):
 
     decorators: list[str]
     parameters: dict[str, str]  # {name: type hint}
+    return_typehint: str
     return_values: list[str]  # [type hint]
 
     def __init__(self, source: str) -> None:
@@ -53,14 +54,11 @@ class FunctionDescription(DescriptionABC):
             flags=re.MULTILINE,
         )
         parameter_string: str = "" if re_match is None else re_match.group(1)
-        print("...parameter string")
-        print(parameter_string)
         re_iter_match = re.finditer(
             pattern=r"(?:^|,)[\t ]*(\w+)(?:[\t ]*:[\t ]*(?:(\w+\[.*?\])|(\w+))|())(?=(?:[^\]]*?,|[^\]]*?$))",
             string=parameter_string,
             flags=re.MULTILINE,
         )
-        print("...re_iter_match")
         self.parameters: dict[str, str] = {}
         for re_match in re_iter_match:
             self.parameters[re_match.group(1)] = (
@@ -75,12 +73,12 @@ class FunctionDescription(DescriptionABC):
             string=source,
             flags=re.MULTILINE,
         )
-        return_string: str = "" if re_match is None else re_match.group(1)
+        self.return_typehint: str = "" if re_match is None else re_match.group(1)
         self.return_values: list[str]
-        if return_string.startswith("tuple["):
+        if self.return_typehint.startswith("tuple["):
             self.return_values = re.split(
                 pattern=r"\s*,\s*",
-                string=return_string[6:-1],
+                string=self.return_typehint[6:-1],
             )
         else:
-            self.return_values = [return_string]
+            self.return_values = [self.return_typehint]
