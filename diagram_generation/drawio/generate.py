@@ -71,7 +71,7 @@ def get_responsability_value_height(description: ClassDescription) -> tuple[str,
     responsability_height = responsability_text.count("&lt;div&gt;") * 20 + 10
     responsability_height = max(responsability_height, 20)
 
-    return responsability_text, responsability_height
+    return _normalize_text_for_xml_embeding(responsability_text), responsability_height
 
 
 def get_members_value_height(description: ClassDescription) -> tuple[str, int]:
@@ -81,7 +81,7 @@ def get_members_value_height(description: ClassDescription) -> tuple[str, int]:
     )  # _private: list[str]&amp;nbsp;
     members_height = members_text.count("&lt;div&gt;") * 20 + 10
     members_height = max(members_height, 20)
-    return members_text, members_height
+    return _normalize_text_for_xml_embeding(members_text), members_height
 
 
 def get_methods_value_height(description: ClassDescription) -> tuple[str, int]:
@@ -93,4 +93,17 @@ def get_methods_value_height(description: ClassDescription) -> tuple[str, int]:
     methods_height = methods_text.count("&lt;div&gt;") * 20 + 10
     methods_height = max(methods_height, 20)
 
-    return methods_text, methods_height
+    return _normalize_text_for_xml_embeding(methods_text), methods_height
+
+
+def _normalize_text_for_xml_embeding(text: str) -> str:
+    replacements: dict[str, str] = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&apos;",
+    }
+    for key, value in replacements.items():
+        text = text.replace(key, value)
+    return text
