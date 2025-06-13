@@ -37,43 +37,53 @@ def update_drawio(current_xml: str, class_descriptions: list[ClassDescription]) 
 
         id: int = int(re_match.group(1))
 
-        # Replace class values
+        # Replace responsability
         current_xml = re.sub(
             pattern=f"(<mxCell id=\"{id + 1}\" value=\").*?(\")",
             repl=f"\\1{responsability_text}\\2",
             string=current_xml,
             flags=re.MULTILINE,
         )
-        current_xml = re.sub(
-            pattern=f"(<mxCell id=\"{id + 1}\"(?:.|\n)*?mxGeometry.*?height=\").*?(\")",
-            repl=f"\\1{responsability_height}\\2",
+        re_match = re.search(
+            pattern=f"(?s)<mxCell id=\"{id + 1}\".*?mxGeometry.*?height=\"(.*?)\"",
             string=current_xml,
             flags=re.MULTILINE,
         )
+        if re_match is None:
+            raise Exception("Failed to get responsability height")
+        current_xml = current_xml[: re_match.start(1)] + str(responsability_height) + current_xml[re_match.end(1):]
+
+        # Replace members
         current_xml = re.sub(
             pattern=f"(<mxCell id=\"{id + 2}\" value=\").*?(\")",
             repl=f"\\1{members_text}\\2",
             string=current_xml,
             flags=re.MULTILINE,
         )
-        current_xml = re.sub(
-            pattern=f"(<mxCell id=\"{id + 2}\"(?:.|\n)*?mxGeometry.*?height=\").*?(\")",
-            repl=f"\\1{members_height}\\2",
+        re_match = re.search(
+            pattern=f"(?s)<mxCell id=\"{id + 2}\".*?mxGeometry.*?height=\"(.*?)\"",
             string=current_xml,
             flags=re.MULTILINE,
         )
+        if re_match is None:
+            raise Exception("Failed to get members height")
+        current_xml = current_xml[: re_match.start(1)] + str(members_height) + current_xml[re_match.end(1):]
+
+        # Replace methods
         current_xml = re.sub(
             pattern=f"(<mxCell id=\"{id + 3}\" value=\").*?(\")",
             repl=f"\\1{methods_text}\\2",
             string=current_xml,
             flags=re.MULTILINE,
         )
-        current_xml = re.sub(
-            pattern=f"(<mxCell id=\"{id + 3}\"(?:.|\n)*?mxGeometry.*?height=\").*?(\")",
-            repl=f"\\1{methods_height}\\2",
+        re_match = re.search(
+            pattern=f"(?s)<mxCell id=\"{id + 3}\".*?mxGeometry.*?height=\"(.*?)\"",
             string=current_xml,
             flags=re.MULTILINE,
         )
+        if re_match is None:
+            raise Exception("Failed to get methods height")
+        current_xml = current_xml[: re_match.start(1)] + str(methods_height) + current_xml[re_match.end(1):]
 
     # Add new classes
     max_id: int = _get_max_id_in_drawio(current_xml)
