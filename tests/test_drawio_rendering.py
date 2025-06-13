@@ -4,6 +4,7 @@ from diagram_generation.drawio.generate import (
     get_methods_value_height,
     get_responsability_value_height,
 )
+from diagram_generation.drawio.update import update_drawio
 from diagram_generation.python.class_description import ClassDescription
 from diagram_generation.python.function_description import FunctionDescription
 
@@ -51,3 +52,24 @@ def test_drawio_rendering() -> None:
     </mxCell>
 """
     )
+
+
+def test_update() -> None:
+    class_description = ClassDescription(
+        source="",
+    )
+    class_description.name = "A"
+    class_description.docstring = "A docstring\nResponsabilities:\n- A responsability"
+    class_description.base_classes = ["B", "C"]
+    class_description.members = {"member": ("member_typehint", "member_doc")}
+    func_description = FunctionDescription(source="")
+    func_description.name = "func"
+    func_description.parameters = {"a": "a_typehint", "b": "b_typehint"}
+    func_description.return_typehint = "return_typehint"
+    class_description.methods = [func_description]
+
+    xml = class_full_drawio_table(class_description, 0)
+
+    updated_xml = update_drawio(current_xml=xml, class_descriptions=[class_description])
+
+    assert xml == updated_xml
