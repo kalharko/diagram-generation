@@ -121,7 +121,7 @@ def update_drawio(current_xml: str, class_descriptions: list[ClassDescription]) 
 
 
 def _get_max_id_in_drawio(xml: str) -> int:
-    re_iter_match: Iterator[Match[str]] | None = re.finditer(
+    re_iter_match: Iterator[Match[str]] = re.finditer(
         pattern=r"<mxCell id=\"(\d+)\"",
         string=xml,
         flags=re.MULTILINE,
